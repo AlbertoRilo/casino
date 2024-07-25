@@ -3,33 +3,31 @@
 
 import React, { useState } from 'react';
 import CasinoForm from './CasinoForm';
-import GameForm from './GameForm';
+import UploadCSVForm from './UploadCSVForm';
 
 const Tabs: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'casino' | 'game'>('casino');
-
-  const handleTabChange = (tab: 'casino' | 'game') => {
-    setActiveTab(tab);
-  };
+  const [activeTab, setActiveTab] = useState<'casino' | 'upload'>('casino');
 
   return (
-    <div>
-      <div className="flex mb-4">
-        <button
-          className={`mr-4 px-4 py-2 ${activeTab === 'casino' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-800'} rounded`}
-          onClick={() => handleTabChange('casino')}
-        >
-          Casino
-        </button>
-        <button
-          className={`px-4 py-2 ${activeTab === 'game' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-800'} rounded`}
-          onClick={() => handleTabChange('game')}
-        >
-         Game
-        </button>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-7xl bg-white rounded-lg shadow-md p-8">
+        <div className="mb-8">
+          <button
+            className={`px-4 py-2 mr-4 rounded ${activeTab === 'casino' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+            onClick={() => setActiveTab('casino')}
+          >
+            Add New Casino
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${activeTab === 'upload' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+            onClick={() => setActiveTab('upload')}
+          >
+            Upload CSV
+          </button>
+        </div>
+        {activeTab === 'casino' && <CasinoForm />}
+        {activeTab === 'upload' && <UploadCSVForm />}
       </div>
-      {activeTab === 'casino' && <CasinoForm />}
-      {activeTab === 'game' && <GameForm />}
     </div>
   );
 };
