@@ -249,53 +249,52 @@ bonuses.forEach(bonus => {
     let bonusTypeId;
 
     if (result.length <= 0) {
-      // Si el proveedor no existe, insértalo
+      // Si el bonus type no existe, insértalo
       const bonusTypeQ = `INSERT INTO BonusType (bonusTypeName) VALUES (?)`;
       db.query(bonusTypeQ, [bonus.bonusTypeId.value], (err, insertResult) => {
         if (err) {
-          console.error('Error inserting game provider data:', err);
+          console.error('Error inserting bonus type data:', err);
           return;
         }
         bonusTypeId = insertResult.insertId;
-        const bonusQ = `INSERT INTO Bonus (gameName, gameDescription, gameProviderId) VALUES (?, ?, ?)`;
-        db.query(bonusQ, [bonus.gameName, game.gameDescription.value, providerId], (err, insertResult) => {
+        const bonusQ = `INSERT INTO Bonus (bonusTypeId,bonusAmount, bonusWE, sticky, bonusText, bonusTerms) VALUES (?, ?, ?, ?, ?, ?)`;
+        db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.text, bonus.bonusTerms], (err, insertResult) => {
           if (err) {
             console.error('Error inserting game data:', err);
             return;
           }
-          const gameId = insertResult.insertId;
-          const casinoGameQuery = `INSERT INTO CasinoGame (casinoId, gameId) VALUES (?, ?)`;
-          db.query(casinoGameQuery, [casinoId, gameId], (err) => {
+          const bonusId = insertResult.insertId;
+          const casinoBonusQuery = `INSERT INTO CasinoBonus (casinoId, bonusId) VALUES (?, ?)`;
+          db.query(casinoBonusQuery, [casinoId, bonusId], (err) => {
             if (err) {
-              console.error('Error inserting casino game data:', err);
+              console.error('Error inserting casino bonus data:', err);
             } else {
-              console.log('Game successfully associated with casino.');
+              console.log('Bonus successfully associated with casino.');
             }
           });
         });
       });
     } else {
-      // Si el proveedor existe, usa su ID
-      providerId = result[0].providerId;
-      const gameQ = `INSERT INTO Game (gameName, gameDescription, gameProviderId) VALUES (?, ?, ?)`;
-      db.query(gameQ, [game.gameName, game.gameDescription.value, providerId], (err, insertResult) => {
+      // Si el bonus type existe, usa su ID
+      bonusTypeId = result[0].bonusTypeId;
+      const bonusQ = `INSERT INTO Bonus (bonusTypeId,bonusAmount, bonusWE, sticky, bonusText, bonusTerms) VALUES (?, ?, ?, ?, ?, ?)`;
+      db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.text, bonus.bonusTerms], (err, insertResult) => {
         if (err) {
           console.error('Error inserting game data:', err);
           return;
         }
-        const gameId = insertResult.insertId;
-        const casinoGameQuery = `INSERT INTO CasinoGame (casinoId, gameId) VALUES (?, ?)`;
-        db.query(casinoGameQuery, [casinoId, gameId], (err) => {
+        const bonusId = insertResult.insertId;
+        const casinoBonusQuery = `INSERT INTO CasinoBonus (casinoId, bonusId) VALUES (?, ?)`;
+        db.query(casinoBonusQuery, [casinoId, bonusId], (err) => {
           if (err) {
-            console.error('Error inserting casino game data:', err);
+            console.error('Error inserting casino bonus data:', err);
           } else {
-            console.log('Game successfully associated with casino.');
+            console.log('Bonus successfully associated with casino.');
           }
         });
       });
     }
 
-   
   });
 });
 
