@@ -222,27 +222,16 @@ games.forEach(game => {
 
 
 //Bonus
-      bonuses.forEach(bonus => {
-        const bonusQuery = `INSERT INTO Bonus (bonusTypeId, bonusAmount, bonusWE, sticky, bonusText, bonusTerms) VALUES (?, ?, ?, ?, ?, ?)`;
-        db.query(bonusQuery, [bonus.bonusTypeId.value, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.bonusText, bonus.bonusTerms], (err, result) => {
-          if (err) {
-            console.error('Error inserting bonus data:', err);
-            return;
-          }
-          const bonusId = result.insertId;
-          const casinoBonusQuery = `INSERT INTO CasinoBonus (casinoId, bonusId) VALUES (?, ?)`;
-          db.query(casinoBonusQuery, [casinoId, bonusId], (err) => {
-            if (err) console.error('Error inserting casino-bonus relationship:', err);
-          });
-        });
-      });
- 
+
+// Bonus
 bonuses.forEach(bonus => { 
+  console.log('Procesando bonus:', bonus); // Verificar el contenido del bonus
+
   // Primero, verifica si el proveedor del juego existe
   const prevQueryBonusType = `SELECT bonusTypeId FROM BonusType WHERE bonusTypeName = ?`;
   db.query(prevQueryBonusType, [bonus.bonusTypeId.value], (err, result) => {
     if (err) {
-      console.error('Error retrieving game provider data:', err);
+      console.error('Error retrieving bonus type data:', err);
       return;
     }
 
@@ -257,10 +246,13 @@ bonuses.forEach(bonus => {
           return;
         }
         bonusTypeId = insertResult.insertId;
+
+        // Asegurarse de que todos los campos de bonus estén presentes
+        console.log('Insertando bonus con ID de tipo nuevo:', bonusTypeId);
         const bonusQ = `INSERT INTO Bonus (bonusTypeId,bonusAmount, bonusWE, sticky, bonusText, bonusTerms) VALUES (?, ?, ?, ?, ?, ?)`;
-        db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.text, bonus.bonusTerms], (err, insertResult) => {
+        db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.bonusText, bonus.bonusTerms], (err, insertResult) => {
           if (err) {
-            console.error('Error inserting game data:', err);
+            console.error('Error inserting bonus data:', err);
             return;
           }
           const bonusId = insertResult.insertId;
@@ -277,10 +269,13 @@ bonuses.forEach(bonus => {
     } else {
       // Si el bonus type existe, usa su ID
       bonusTypeId = result[0].bonusTypeId;
+
+      // Asegurarse de que todos los campos de bonus estén presentes
+      console.log('Insertando bonus con ID de tipo existente:', bonusTypeId);
       const bonusQ = `INSERT INTO Bonus (bonusTypeId,bonusAmount, bonusWE, sticky, bonusText, bonusTerms) VALUES (?, ?, ?, ?, ?, ?)`;
-      db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.text, bonus.bonusTerms], (err, insertResult) => {
+      db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.bonusText, bonus.bonusTerms], (err, insertResult) => {
         if (err) {
-          console.error('Error inserting game data:', err);
+          console.error('Error inserting bonus data:', err);
           return;
         }
         const bonusId = insertResult.insertId;
@@ -294,53 +289,141 @@ bonuses.forEach(bonus => {
         });
       });
     }
-
   });
 });
 
 
+// torneos
+tournaments.forEach(tournament => {
+  const prevQueryTournamentType = `SELECT tournamentTypeId FROM TournamentType WHERE tournamentTypeName = ?`;
+  db.query(prevQueryTournamentType, [tournament.tournamentTypeId.value], (err, result) => {
+    if (err) {
+      console.error('Error retrieving tournament type data:', err);
+      return;
+    }
 
+    let tournamentTypeId;
 
+    if (result.length > 0) {
+      // Ya existe el tournament type
+      tournamentTypeId = result[0].tournamentTypeId; // Corrección de nombre
+      const tournamentQuery = `INSERT INTO Tournament (tournamentTypeId, tournamentDescription, totalFS, totalPrizePool, casinoId) VALUES (?, ?, ?, ?, ?)`;
+      db.query(tournamentQuery, [tournamentTypeId, tournament.tournamentDescription, tournament.totalFS, tournament.totalPrizePool, casinoId], (err) => {
+        if (err) console.error('Error inserting tournament data:', err);
+      });
+    } else {
+      // Primero hay que añadir el tournament type
+      const QueryTournamentType = `INSERT INTO TournamentType (tournamentTypeName) VALUES (?)`;
+      db.query(QueryTournamentType, [tournament.tournamentTypeId.value], (err, result) => {
+        if (err) {
+          console.error('Error inserting tournament type data:', err);
+          return;
+        }
 
-
-
-
-
-
-      // Insertar relación con torneos
-      tournaments.forEach(tournament => {
+        tournamentTypeId = result.insertId; // Corrección de nombre
         const tournamentQuery = `INSERT INTO Tournament (tournamentTypeId, tournamentDescription, totalFS, totalPrizePool, casinoId) VALUES (?, ?, ?, ?, ?)`;
-        db.query(tournamentQuery, [tournament.tournamentTypeId.value, tournament.tournamentDescription, tournament.totalFS, tournament.totalPrizePool, casinoId], (err) => {
+        db.query(tournamentQuery, [tournamentTypeId, tournament.tournamentDescription, tournament.totalFS, tournament.totalPrizePool, casinoId], (err) => {
           if (err) console.error('Error inserting tournament data:', err);
         });
       });
+    }
+  });
+});
 
-      // Insertar relación con proveedores de pago
-      paymentProviders.forEach(provider => {
-        const providerQuery = `SELECT providerId FROM PaymentProvider WHERE paymentProviderName = ?`;
-        db.query(providerQuery, [provider.value], (err, result) => {
+// Insertar relación con proveedores de pago
+paymentProviders.forEach(provider => {
+  // Verificar si el proveedor de pago ya existe
+  console.log('AQUI LLEGAN LOS VALORES DE PROVIDER!!!!!!!!!!!: ',provider.paymentProviderName.value, provider.paymentProviderName.label)
+  const providerQuery = `SELECT providerId FROM PaymentProvider WHERE paymentProviderName = ?`;
+  db.query(providerQuery, [provider.paymentProviderName.value], (err, result) => {
+    if (err) {
+      console.error('Error retrieving payment provider data:', err);
+      return;
+    }
+
+    if (result.length > 0) {
+      // Si el proveedor de pago existe, usar su ID
+      const providerId = result[0].providerId;
+      const casinoProviderQuery = `INSERT INTO CasinoPaymentProvider (casinoId, providerId) VALUES (?, ?)`;
+      db.query(casinoProviderQuery, [casinoId, providerId], (err) => {
+        if (err) {
+          console.error('Error inserting casino-payment provider relationship:', err);
+        } else {
+          console.log(`Successfully associated provider with casino.`);
+        }
+      });
+    } else {
+      // Si el proveedor de pago no existe, insertarlo primero
+      const insertProviderQuery = `INSERT INTO PaymentProvider (paymentProviderName) VALUES (?)`;
+      db.query(insertProviderQuery, [provider.paymentProviderName.value], (err, insertResult) => {
+        if (err) {
+          console.error('Error inserting payment provider data:', err);
+          return;
+        }
+        const providerId = insertResult.insertId;
+        const casinoProviderQuery = `INSERT INTO CasinoPaymentProvider (casinoId, providerId) VALUES (?, ?)`;
+        db.query(casinoProviderQuery, [casinoId, providerId], (err) => {
           if (err) {
-            console.error('Error retrieving payment provider data:', err);
-            return;
-          }
-          if (result.length > 0) {
-            const providerId = result[0].providerId;
-            const casinoProviderQuery = `INSERT INTO CasinoPaymentProvider (casinoId, providerId) VALUES (?, ?)`;
-            db.query(casinoProviderQuery, [casinoId, providerId], (err) => {
-              if (err) console.error('Error inserting casino-payment provider relationship:', err);
-            });
+            console.error('Error inserting casino-payment provider relationship:', err);
+          } else {
+            console.log(`Successfully inserted and associated provider ${provider.value} with casino.`);
           }
         });
       });
+    }
+  });
+});
+
 
       // Insertar relación con licencias
       licenses.forEach(license => {
-        const licenseQuery = `INSERT INTO CasinoLicense (casinoId, licenseId) VALUES (?, ?)`;
-        db.query(licenseQuery, [casinoId, license.value], (err) => {
-          if (err) console.error('Error inserting casino-license relationship:', err);
+        // Verificar si la licencia ya existe
+        console.log('AQUI LLEGAN LOS VALORES DE License!!!!!!!!!!!: ',license.licenseName.value, license.licenseName.label)
+        const licenseQuery = `SELECT licenseId FROM License WHERE licenseName = ?`;
+        db.query(licenseQuery, [license.licenseName.value], (err, result) => {
+          if (err) {
+            console.error('Error retrieving license data:', err);
+            return;
+          }
+      
+          let licenseId;
+      
+          if (result.length > 0) {
+            // Si la licencia existe, usar su ID
+            licenseId = result[0].licenseId;
+          } else {
+            // Si la licencia no existe, insertarla primero
+            const insertLicenseQuery = `INSERT INTO License (licenseName) VALUES (?)`;
+            db.query(insertLicenseQuery, [license.licenseName.value], (err, insertResult) => {
+              if (err) {
+                console.error('Error inserting license data:', err);
+                return;
+              }
+              licenseId = insertResult.insertId;
+              // Insertar la relación después de obtener el ID de la licencia
+              const casinoLicenseQuery = `INSERT INTO CasinoLicense (casinoId, licenseId) VALUES (?, ?)`;
+              db.query(casinoLicenseQuery, [casinoId, licenseId], (err) => {
+              if (err) {
+                console.error('Error inserting casino-license relationship:', err);
+                } else {
+                console.log(`Successfully associated license ID with casino ID.`);
+                }
+              });
+            });
+            return; // Salir de la iteración actual del forEach
+          }
+      
+          // Insertar la relación si la licencia ya existe
+          const casinoLicenseQuery = `INSERT INTO CasinoLicense (casinoId, licenseId) VALUES (?, ?)`;
+          db.query(casinoLicenseQuery, [casinoId, licenseId], (err) => {
+          if (err) {
+            console.error('Error inserting casino-license relationship:', err);
+          } else {
+          console.log(`Successfully associated license ID $with casino ID $.`);
+            }
+          });
         });
       });
-
       res.status(201).send('Casino created successfully.');
     }
   );
