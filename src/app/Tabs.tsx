@@ -1,12 +1,24 @@
-// src/app/components/Tabs.tsx
-"use client";
-
+// Tabs.tsx
 import React, { useState } from 'react';
 import CasinoForm from './CasinoForm';
 import UploadCSVForm from './UploadCSVForm';
+import axios from 'axios';
 
 const Tabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'casino' | 'upload'>('casino');
+
+  const handleCasinoFormSubmit = async (formData: any) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/casino', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('Casino form submitted:', response.data);
+    } catch (error) {
+      console.error('There was an error submitting the form!', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
@@ -25,7 +37,7 @@ const Tabs: React.FC = () => {
             Upload CSV
           </button>
         </div>
-        {activeTab === 'casino' && <CasinoForm />}
+        {activeTab === 'casino' && <CasinoForm onSubmit={handleCasinoFormSubmit} />}
         {activeTab === 'upload' && <UploadCSVForm />}
       </div>
     </div>
