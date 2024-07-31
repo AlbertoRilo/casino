@@ -398,13 +398,25 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
     };
   
     try {
-      const response = await axios.post('http://localhost:5000/api/casino', payload, {
+      // Determina la URL de la API basándote en NODE_ENV
+      let apiUrl;
+      if (process.env.NODE_ENV === 'development') {
+        apiUrl = 'http://localhost:5000/api';
+      } else {
+        apiUrl = process.env.REACT_APP_API_URL;
+      }
+  
+      // Usa la URL en la llamada a axios
+      const response = await axios.post(`${apiUrl}/casino`, payload, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
+  
+      // Maneja la respuesta
       console.log(response.data);
     } catch (error) {
+      // Maneja el error
       console.error('There was an error submitting the form!', error);
     }
   };
