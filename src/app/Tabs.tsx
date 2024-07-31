@@ -1,4 +1,5 @@
 // Tabs.tsx
+'use client'
 import React, { useState } from 'react';
 import CasinoForm from './CasinoForm';
 import UploadCSVForm from './UploadCSVForm';
