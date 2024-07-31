@@ -14,7 +14,7 @@ const UploadCSVForm: React.FC = () => {
       const formData = new FormData();
       formData.append('csvFile', data.csvFile[0]);
 
-      await axios.post('/api/upload-csv', formData, {
+      await axios.post('http://localhost:5000/api/uploadcsv', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
