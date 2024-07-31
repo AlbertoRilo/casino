@@ -10,7 +10,8 @@ const Tabs: React.FC = () => {
 
   const handleCasinoFormSubmit = async (formData: any) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/casino', formData, {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const response = await axios.post(`${apiUrl}/casino`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },

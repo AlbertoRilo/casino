@@ -606,5 +606,5 @@ app.post('/api/uploadcsv', upload.single('file'), (req, res) => {
 
 // Iniciar el servidor
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running `);
 });

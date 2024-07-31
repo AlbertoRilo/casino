@@ -398,7 +398,8 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
     };
   
     try {
-      const response = await axios.post('http://localhost:5000/api/casino', payload, {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const response = await axios.post(`${apiUrl}/casino`, payload, {
         headers: {
           'Content-Type': 'application/json',
         },
