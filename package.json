@@ -23,7 +23,8 @@
     "react-hook-form": "^7.52.1",
     "react-select": "^5.8.0",
     "react-select-country-list": "^2.2.3",
-    "streamifier": "^0.1.1"
+    "streamifier": "^0.1.1",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@types/node": "^20",
