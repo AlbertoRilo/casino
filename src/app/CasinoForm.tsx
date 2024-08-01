@@ -412,11 +412,12 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
           'Content-Type': 'application/json',
         },
       });
-  
+      alert('Casino uploaded successfully');
       // Maneja la respuesta
       console.log(response.data);
     } catch (error) {
       // Maneja el error
+      alert('Error submitting data');
       console.error('There was an error submitting the form!', error);
     }
   };
