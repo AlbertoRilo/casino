@@ -74,7 +74,7 @@ app.post('/api/casino', (req, res) => {
       casinoName,
       dateFounded,
       address,
-      casinoOwner,
+      JSON.stringify(casinoOwner),
       dateLaunched,
       casinoUrl,
       phoneSupport,

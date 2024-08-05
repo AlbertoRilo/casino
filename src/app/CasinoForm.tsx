@@ -18,7 +18,7 @@ interface CasinoFormInputs {
   casinoName: string;
   dateFounded: string;
   address: string;
-  casinoOwner: string;
+  casinoOwner: { value: string; label: string } | null;
   dateLaunched: string;
   casinoUrl: string;
   phoneSupport: string;
@@ -205,6 +205,58 @@ const gameProviderOptions = [
   { value: 'TOPTrend Gaming', label: 'TOPTrend Gaming' }
 ];
 
+const casinoOwnersOptions = [
+  { value: 'MGM', label: 'MGM Resorts International' },
+  { value: 'Caesars', label: 'Caesars Entertainment' },
+  { value: 'LasVegasSands', label: 'Las Vegas Sands' },
+  { value: 'Wynn', label: 'Wynn Resorts' },
+  { value: 'Melco', label: 'Melco Resorts & Entertainment' },
+  { value: 'Genting', label: 'Genting Group' },
+  { value: 'Galaxy', label: 'Galaxy Entertainment Group' },
+  { value: 'HardRock', label: 'Hard Rock International' },
+  { value: 'Boyd', label: 'Boyd Gaming' },
+  { value: 'PennNational', label: 'Penn National Gaming' },
+  { value: 'Crown', label: 'Crown Resorts' },
+  { value: 'SJM', label: 'SJM Holdings' },
+  { value: 'Mohegan', label: 'Mohegan Gaming & Entertainment' },
+  { value: 'ResortsWorld', label: 'Resorts World' },
+  { value: 'RedRock', label: 'Red Rock Resorts' },
+  { value: 'Sun', label: 'Sun International' },
+  { value: 'GoldenEntertainment', label: 'Golden Entertainment' },
+  { value: 'Pechanga', label: 'Pechanga Resort & Casino' },
+  { value: 'Foxwoods', label: 'Foxwoods Resort Casino' },
+  { value: 'Seminole', label: 'Seminole Gaming' },
+  { value: 'StationCasinos', label: 'Station Casinos' },
+  { value: 'PaddyPower', label: 'Paddy Power' },
+  { value: 'WilliamHill', label: 'William Hill' },
+  { value: 'Flutter', label: 'Flutter Entertainment' },
+  { value: 'Grosvenor', label: 'Grosvenor Casinos' },
+  { value: 'RankGroup', label: 'Rank Group' },
+  { value: 'Bet365', label: 'Bet365' },
+  { value: 'Pala', label: 'Pala Casino Resort and Spa' },
+  { value: 'CacheCreek', label: 'Cache Creek Casino Resort' },
+  { value: 'SanManuel', label: 'San Manuel Casino' },
+  { value: 'Viejas', label: 'Viejas Casino & Resort' },
+  { value: 'TurningStone', label: 'Turning Stone Resort Casino' },
+  { value: 'Eldorado', label: 'Eldorado Resorts' },
+  { value: 'ImperialPacific', label: 'Imperial Pacific International' },
+  { value: 'Chukchansi', label: 'Chukchansi Gold Resort & Casino' },
+  { value: 'Choctaw', label: 'Choctaw Casinos & Resorts' },
+  { value: 'Harrah', label: 'Harrah\'s Entertainment' },
+  { value: 'GoldenNugget', label: 'Golden Nugget' },
+  { value: 'Aliante', label: 'Aliante Casino + Hotel + Spa' },
+  { value: 'Cannery', label: 'Cannery Casino and Hotel' },
+  { value: 'CircusCircus', label: 'Circus Circus Las Vegas' },
+  { value: 'Flamingo', label: 'Flamingo Las Vegas' },
+  { value: 'Luxor', label: 'Luxor Hotel and Casino' },
+  { value: 'MandalayBay', label: 'Mandalay Bay Resort and Casino' },
+  { value: 'Mirage', label: 'The Mirage' },
+  { value: 'MonteCarlo', label: 'Monte Carlo Resort and Casino' },
+  { value: 'Excalibur', label: 'Excalibur Hotel and Casino' },
+  { value: 'TreasureIsland', label: 'Treasure Island Hotel and Casino' },
+  { value: 'TheVenetian', label: 'The Venetian Las Vegas' },
+  { value: 'Palazzo', label: 'The Palazzo' }
+];
 
 const licensingAuthorities = [
   { value: 'MGA', label: 'Malta(MGA)' },
@@ -328,7 +380,7 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
   const [casinoName, setCasinoName] = useState('');
   const [dateFounded, setDateFounded] = useState('');
   const [address, setAddress] = useState('');
-  const [casinoOwner, setCasinoOwner] = useState('');
+  const [casinoOwner, setCasinoOwner] = useState<{ value: string; label: string } | null>(null);
   const [dateLaunched, setDateLaunched] = useState('');
   const [casinoUrl, setCasinoUrl] = useState('');
   const [phoneSupport, setPhoneSupport] = useState('');
@@ -558,23 +610,13 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
         />
       </div>
       <div>
-        <label className="block text-gray-700">Casino owner</label>
-        <Controller
-          name="owner"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <input
-              {...field}
-              type="text"
-              className="w-full mt-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-              onChange={(e) => {
-                setCasinoOwner(e.target.value);
-                field.onChange(e.target.value);
-              }}
-            />
-          )}
-        />
+            <label className="block text-gray-700">Casino owner</label>
+          <Select
+            options={casinoOwnersOptions}
+            value={casinoOwner} // Asigna el valor seleccionado a través del estado country
+            onChange={(selectedOption) => setCasinoOwner(selectedOption)} // Actualiza el estado country con la opción seleccionada
+            className="mt-1"
+          />
       </div>
       <div>
         <label className="block text-gray-700">Date Launched</label>
