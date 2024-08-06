@@ -30,6 +30,7 @@ interface CasinoFormInputs {
   cryptoCurrenciesSupported: boolean;
   country: { value: string; label: string } | null;
   bannedCountries: { value: string; label: string }[];
+  casinoCertifications: { value: string; label: string }[];
   languages: { value: string; label: string }[];
   currencies:{ value: string; label: string }[];
   games: GameFormInputs[];
@@ -69,6 +70,59 @@ interface LicenseFormInputs {
   licenseName: { value: string; label: string } | null;
 }
 //first version hardcoded but then fetch from DB 
+
+const casinoCertificationsOptions = [
+  { value: 'eCOGRA', label: 'eCOGRA' },
+  { value: 'iTechLabs', label: 'iTech Labs' },
+  { value: 'GLI', label: 'Gaming Laboratories International (GLI)' },
+  { value: 'TST', label: 'Technical Systems Testing (TST)' },
+  { value: 'SQS', label: 'Swiss Quality Testing Services (SQS)' },
+  { value: 'BMM', label: 'BMM Testlabs' },
+  { value: 'SIQ', label: 'SIQ' },
+  { value: 'Quinel', label: 'Quinel' },
+  { value: 'eGamingCuracao', label: 'eGaming Curacao' },
+  { value: 'MGA', label: 'Malta Gaming Authority (MGA)' },
+  { value: 'UKGC', label: 'UK Gambling Commission (UKGC)' },
+  { value: 'AGCC', label: 'Alderney Gambling Control Commission (AGCC)' },
+  { value: 'Kahnawake', label: 'Kahnawake Gaming Commission' },
+  { value: 'Gibraltar', label: 'Gibraltar Gambling Commissioner' },
+  { value: 'IsleOfMan', label: 'Isle of Man Gambling Supervision Commission' },
+  { value: 'Spelinspektionen', label: 'Swedish Gambling Authority (Spelinspektionen)' },
+  { value: 'DGOJ', label: 'Dirección General de Ordenación del Juego (DGOJ)' },
+  { value: 'Arjel', label: 'Autorité de Régulation des Jeux En Ligne (ARJEL)' },
+  { value: 'Pagcor', label: 'Philippine Amusement and Gaming Corporation (PAGCOR)' },
+  { value: 'NZGC', label: 'New Zealand Gambling Commission (NZGC)' },
+  { value: 'NMi', label: 'NMi Metrology & Gaming' },
+  { value: 'EGL', label: 'Eclipse Gaming Labs (EGL)' },
+  { value: 'Trisigma', label: 'Trisigma' },
+  { value: 'RSG-Eclipse', label: 'RSG-Eclipse' },
+  { value: 'ASGCC', label: 'Austria’s Gaming and Casino Commission (ASGCC)' },
+  { value: 'HellenicGC', label: 'Hellenic Gaming Commission (HGC)' },
+  { value: 'NAGRA', label: 'North American Gaming Regulators Association (NAGRA)' },
+  { value: 'LotteriesCom', label: 'Lotteries and Gaming Authority of Malta (LGA)' },
+  { value: 'ONJN', label: 'Romanian National Gambling Office (ONJN)' },
+  { value: 'DanishGC', label: 'Danish Gambling Authority' },
+  { value: 'FIFe', label: 'Fédération Internationale Féline (FIFe)' },
+  { value: 'EASG', label: 'European Association for the Study of Gambling (EASG)' },
+  { value: 'LVS', label: 'Las Vegas Sands Corp' },
+  { value: 'MVS', label: 'Macao Gaming Standards' },
+  { value: 'G4', label: 'Global Gambling Guidance Group (G4)' },
+  { value: 'EGBA', label: 'European Gaming and Betting Association (EGBA)' },
+  { value: 'IBAS', label: 'Independent Betting Adjudication Service (IBAS)' },
+  { value: 'ADR', label: 'Alternative Dispute Resolution (ADR)' },
+  { value: 'GREF', label: 'Gaming Regulators European Forum (GREF)' },
+  { value: 'EAUI', label: 'European Alliance for UItimate Integrity (EAUI)' },
+  { value: 'NCB', label: 'National Compliance Bureau (NCB)' },
+  { value: 'RGCC', label: 'Responsible Gambling Council (RGC)' },
+  { value: 'NCAGE', label: 'National Council on Problem Gambling (NCPG)' },
+  { value: 'GamblingTherapy', label: 'Gambling Therapy' },
+  { value: 'GamCare', label: 'GamCare' },
+  { value: 'BeGambleAware', label: 'BeGambleAware' },
+  { value: 'GamblersAnonymous', label: 'Gamblers Anonymous' },
+  { value: 'SelfExclusion', label: 'Self-Exclusion Programs' },
+  { value: 'FairGaming', label: 'Fair Gaming Advocate (FGA)' }
+];
+
 const currencyOptions = [
   { value: 'USD', label: 'US Dollar' },
   { value: 'EUR', label: 'Euro' },
@@ -402,6 +456,7 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
   const [cryptoCurrenciesSupported, setCryptoCurrenciesSupported] = useState(false);
   const [country, setCountry] = useState<{ value: string; label: string } | null>(null);
   const [bannedCountries, setBannedCountries] = useState<{ value: string; label: string }[]>([]);
+  const [casinoCertifications, setCasinoCertifications] = useState<{ value: string; label: string }[]>([]);
   const [languages, setLanguages] = useState<{ value: string; label: string }[]>([]);
   const [currencies, setCurrencies] = useState<{ value: string; label: string }[]>([]);
   const [games, setGames] = useState<GameFormInputs[]>([]);
@@ -450,6 +505,7 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
       cryptoCurrenciesSupported,
       country,
       bannedCountries,
+      casinoCertifications,
       languages,
       currencies,
       games,
@@ -527,6 +583,28 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
               onChange={(selectedOptions: MultiValue<{ value: string; label: string }>) => {
                 const selectedArray = selectedOptions as { value: string; label: string }[];
                 setBannedCountries(selectedArray);
+                field.onChange(selectedArray);
+              }}
+              className="mt-1"
+            />
+          )}
+        />
+      </div>
+      <div>
+        <label className="block text-gray-700">Casino Certifications</label>
+        <Controller
+          name="casinoCertifications"
+          control={control}
+          defaultValue={casinoCertifications}
+          render={({ field }) => (
+            <Select
+              {...field}
+              isMulti
+              options={casinoCertificationsOptions}
+              value={casinoCertifications}
+              onChange={(selectedOptions: MultiValue<{ value: string; label: string }>) => {
+                const selectedArray = selectedOptions as { value: string; label: string }[];
+                setCasinoCertifications(selectedArray);
                 field.onChange(selectedArray);
               }}
               className="mt-1"

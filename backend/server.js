@@ -51,6 +51,7 @@ app.post('/api/casino', (req, res) => {
     eSportsBetting,
     cryptoCurrenciesSupported,
     bannedCountries,
+    casinoCertifications,
     country,
     languages,
     currencies,
@@ -65,7 +66,7 @@ app.post('/api/casino', (req, res) => {
 
   // Insertar datos del casino en la base de datos
   const casinoQuery = `INSERT INTO Casino 
-    (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries, liveChat, eSportsBetting, cryptoCurrenciesSupported, country, languages, currencies) 
+    (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries, casinoCertifications, liveChat, eSportsBetting, cryptoCurrenciesSupported, country, languages, currencies) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   db.query(
@@ -82,6 +83,7 @@ app.post('/api/casino', (req, res) => {
       helpCentre,
       ageLimit,
       JSON.stringify(bannedCountries), // Convertir a cadena JSON
+      JSON.stringify(casinoCertifications), // Convertir a cadena JSON
       liveChat,
       eSportsBetting,
       cryptoCurrenciesSupported,
@@ -444,6 +446,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
       .on('data', (row) => {
         // Convertir campos separados por comas a arrays
         row.bannedCountries = row.bannedCountries ? row.bannedCountries.split(',') : [];
+        row.casinoCertifications = row.casinoCertifications ? row.casinoCertifications.split(',') : [];
         row.country = row.country ? { label: row.country.split('|')[0], value: row.country.split('|')[1] } : {};
         row.languages = row.languages ? row.languages.split('|').map(value => ({ value })) : [];
         row.currencies = row.currencies ? row.currencies.split('|').map(value => ({ value })) : [];
@@ -477,7 +480,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
       const {
         casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl,
         phoneSupport, supportEmail, helpCentre, ageLimit, liveChat, eSportsBetting,
-        cryptoCurrenciesSupported, bannedCountries, country, languages, currencies,
+        cryptoCurrenciesSupported, bannedCountries,casinoCertifications, country, languages, currencies,
         games, bonuses, tournaments, paymentProviders, licenses
       } = casino;
     // Verificar y manejar arrays no iterables
@@ -485,6 +488,11 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
       console.error('Expected bannedCountries to be an array, but got:', bannedCountries);
       continue;
     }
+    if (!Array.isArray(casinoCertifications)) {
+      console.error('Expected casino Certifications to be an array, but got:', casinoCertifications);
+      continue;
+    }
+
 
     if (!Array.isArray(country)) {
       console.error('Expected country to be an array, but got:', country);
@@ -528,7 +536,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
 
     // Insertar datos del casino
     const casinoQuery = `INSERT INTO Casino 
-      (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries, liveChat, eSportsBetting, cryptoCurrenciesSupported, country, languages, currencies) 
+      (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries,casinoCertifications, liveChat, eSportsBetting, cryptoCurrenciesSupported, country, languages, currencies) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const [casinoResult] = await db.queryAsync(casinoQuery, [
@@ -543,6 +551,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
       helpCentre,
       ageLimit,
       JSON.stringify(bannedCountries),
+      JSON.stringify(casinoCertifications),
       liveChat,
       eSportsBetting,
       cryptoCurrenciesSupported,
