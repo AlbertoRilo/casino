@@ -68,7 +68,7 @@ interface PaymentProviderFormInputs {
 interface LicenseFormInputs {
   licenseName: { value: string; label: string } | null;
 }
-
+//first version hardcoded but then fetch from DB 
 const currencyOptions = [
   { value: 'USD', label: 'US Dollar' },
   { value: 'EUR', label: 'Euro' },
@@ -100,9 +100,19 @@ const tournamentType = [
 
 const bonusType = [
   { value :'No deposit bonus', label: ' No deposit bonus'},
-  { value :'Deposit bonus', label: 'Deposit bonus'},
   { value :'Reload bonus', label: 'Reload bonus'},
-  { value :'Cashback bonus', label: 'Cashback bonus '}
+  { value :'Cashback bonus', label: 'Cashback bonus '},
+  { value :'Welcome bonus', label: 'Welcome bonus'},
+  { value :'1st Deposit bonus', label: 'Deposit bonus'},
+  { value :'2nd Deposit bonus', label: '2nd Deposit bonus '},
+  { value :'3rd Deposit bonus', label: '3rd Deposit bonus '},
+  { value :'4th Deposit bonus', label: '4th Deposit bonus '},
+  { value :'Free Spins bonus', label: 'Free spins bonus '},
+  { value :'Sports betting bonus', label: 'Sports betting bonus '},
+  { value :'Live casino bonus', label: 'Live casino bonus '},
+  { value :'Referral bonus', label: 'Referral bonus '},
+  { value :'Anniversary bonus', label: 'Anniversary bonus '},
+
 
 ];
 
