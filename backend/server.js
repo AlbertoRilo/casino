@@ -67,7 +67,7 @@ app.post('/api/casino', (req, res) => {
   // Insertar datos del casino en la base de datos
   const casinoQuery = `INSERT INTO Casino 
     (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries, casinoCertifications, liveChat, eSportsBetting, cryptoCurrenciesSupported, country, languages, currencies) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   db.query(
     casinoQuery,
@@ -537,7 +537,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
     // Insertar datos del casino
     const casinoQuery = `INSERT INTO Casino 
       (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries,casinoCertifications, liveChat, eSportsBetting, cryptoCurrenciesSupported, country, languages, currencies) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const [casinoResult] = await db.queryAsync(casinoQuery, [
       casinoName,
