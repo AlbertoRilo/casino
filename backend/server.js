@@ -49,6 +49,16 @@ app.post('/api/casino', (req, res) => {
     ageLimit,
     liveChat,
     eSportsBetting,
+    timeOut,
+    depositLimit ,
+    lossLimit,
+    realityCheck,
+    selfAssesmentCheck,
+    selfExclusion,
+    timeSessionLimit,
+    wagerLimit,
+    withdrawalLock,
+    vpnAllowed ,
     cryptoCurrenciesSupported,
     bannedCountries,
     casinoCertifications,
@@ -66,8 +76,17 @@ app.post('/api/casino', (req, res) => {
 
   // Insertar datos del casino en la base de datos
   const casinoQuery = `INSERT INTO Casino 
-    (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries, casinoCertifications, liveChat, eSportsBetting, cryptoCurrenciesSupported, country, languages, currencies) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries, casinoCertifications, liveChat, eSportsBetting,   timeOut,
+    depositLimit ,
+    lossLimit,
+    realityCheck,
+    selfAssesmentCheck,
+    selfExclusion,
+    timeSessionLimit,
+    wagerLimit,
+    withdrawalLock,
+    vpnAllowed , cryptoCurrenciesSupported, country, languages, currencies) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   db.query(
     casinoQuery,
@@ -86,6 +105,16 @@ app.post('/api/casino', (req, res) => {
       JSON.stringify(casinoCertifications), // Convertir a cadena JSON
       liveChat,
       eSportsBetting,
+      timeOut,
+      depositLimit ,
+      lossLimit,
+      realityCheck,
+      selfAssesmentCheck,
+      selfExclusion,
+      timeSessionLimit,
+      wagerLimit,
+      withdrawalLock,
+      vpnAllowed ,
       cryptoCurrenciesSupported,
       JSON.stringify(country), // Convertir a cadena JSON
       JSON.stringify(languages), // Convertir a cadena JSON
@@ -479,7 +508,16 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
     for (const casino of results) {
       const {
         casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl,
-        phoneSupport, supportEmail, helpCentre, ageLimit, liveChat, eSportsBetting,
+        phoneSupport, supportEmail, helpCentre, ageLimit, liveChat, eSportsBetting,timeOut,
+        depositLimit ,
+        lossLimit,
+        realityCheck,
+        selfAssesmentCheck,
+        selfExclusion,
+        timeSessionLimit,
+        wagerLimit,
+        withdrawalLock,
+        vpnAllowed ,
         cryptoCurrenciesSupported, bannedCountries,casinoCertifications, country, languages, currencies,
         games, bonuses, tournaments, paymentProviders, licenses
       } = casino;
@@ -536,8 +574,17 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
 
     // Insertar datos del casino
     const casinoQuery = `INSERT INTO Casino 
-      (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries,casinoCertifications, liveChat, eSportsBetting, cryptoCurrenciesSupported, country, languages, currencies) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit, bannedCountries,casinoCertifications, liveChat, eSportsBetting,timeOut,
+    depositLimit ,
+    lossLimit,
+    realityCheck,
+    selfAssesmentCheck,
+    selfExclusion,
+    timeSessionLimit,
+    wagerLimit,
+    withdrawalLock,
+    vpnAllowed , cryptoCurrenciesSupported, country, languages, currencies) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const [casinoResult] = await db.queryAsync(casinoQuery, [
       casinoName,
@@ -554,6 +601,16 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
       JSON.stringify(casinoCertifications),
       liveChat,
       eSportsBetting,
+      timeOut,
+    depositLimit ,
+    lossLimit,
+    realityCheck,
+    selfAssesmentCheck,
+    selfExclusion,
+    timeSessionLimit,
+    wagerLimit,
+    withdrawalLock,
+    vpnAllowed ,
       cryptoCurrenciesSupported,
       JSON.stringify(country),
       JSON.stringify(languages),
