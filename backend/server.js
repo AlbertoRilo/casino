@@ -283,8 +283,9 @@ bonuses.forEach(bonus => {
 
         // Asegurarse de que todos los campos de bonus estén presentes
         console.log('Insertando bonus con ID de tipo nuevo:', bonusTypeId);
-        const bonusQ = `INSERT INTO Bonus (bonusTypeId,bonusAmount, bonusWE, sticky, bonusText, bonusTerms) VALUES (?, ?, ?, ?, ?, ?)`;
-        db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.bonusText, bonus.bonusTerms], (err, insertResult) => {
+
+        const bonusQ = `INSERT INTO Bonus (bonusTypeId,bonusAmount, bonusWR, sticky, bonusText, bonusTerms, bonusUrl, freeSpinsAmount, minimunDeposit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWR, bonus.sticky, bonus.bonusText, bonus.bonusTerms, bonus.bonusUrl, bonus.freeSpinsAmount, bonus.minimumDeposit], (err, insertResult) => {
           if (err) {
             console.error('Error inserting bonus data:', err);
             return;
@@ -306,12 +307,12 @@ bonuses.forEach(bonus => {
 
       // Asegurarse de que todos los campos de bonus estén presentes
       console.log('Insertando bonus con ID de tipo existente:', bonusTypeId);
-      const bonusQ = `INSERT INTO Bonus (bonusTypeId,bonusAmount, bonusWE, sticky, bonusText, bonusTerms) VALUES (?, ?, ?, ?, ?, ?)`;
-      db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.bonusText, bonus.bonusTerms], (err, insertResult) => {
+      const bonusQ = `INSERT INTO Bonus (bonusTypeId,bonusAmount, bonusWR, sticky, bonusText, bonusTerms, bonusUrl, freeSpinsAmount, minimunDeposit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      db.query(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWR, bonus.sticky, bonus.bonusText, bonus.bonusTerms, bonus.bonusUrl, bonus.freeSpinsAmount, bonus.minimumDeposit], (err, insertResult) => {
         if (err) {
           console.error('Error inserting bonus data:', err);
           return;
-        }
+        } 
         const bonusId = insertResult.insertId;
         const casinoBonusQuery = `INSERT INTO CasinoBonus (casinoId, bonusId) VALUES (?, ?)`;
         db.query(casinoBonusQuery, [casinoId, bonusId], (err) => {
@@ -481,8 +482,8 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
         row.currencies = row.currencies ? row.currencies.split('|').map(value => ({ value })) : [];
         row.games = row.games ? row.games.split('|').map(game => ({ gameName: game })) : [];
         row.bonuses = row.bonuses ? row.bonuses.split('|').map(bonus => {
-          const [bonusTypeId, bonusAmount, bonusWE, sticky, bonusText, bonusTerms] = bonus.split(',');
-          return { bonusTypeId, bonusAmount, bonusWE, sticky, bonusText, bonusTerms };
+          const [bonusTypeId, bonusAmount, bonusWR, sticky, bonusText, bonusTerms, bonusUrl, freeSpinsAmount, minimumDeposit] = bonus.split(',');
+          return { bonusTypeId, bonusAmount, bonusWR, sticky, bonusText, bonusTerms, bonusUrl, freeSpinsAmount, minimumDeposit};
         }) : [];
         row.tournaments = row.tournaments ? row.tournaments.split('|').map(tournament => {
           const [tournamentTypeId, tournamentDescription, totalFS, totalPrizePool] = tournament.split(',');
@@ -749,8 +750,8 @@ for (const bonus of bonuses) {
     bonusTypeId = bonusTypeResult[0].bonusTypeId;
   }
 
-  const bonusQ = `INSERT INTO Bonus (bonusTypeId, bonusAmount, bonusWE, sticky, bonusText, bonusTerms) VALUES (?, ?, ?, ?, ?, ?)`;
-  const [bonusResult] = await db.queryAsync(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWE, bonus.sticky, bonus.bonusText, bonus.bonusTerms]);
+  const bonusQ = `INSERT INTO Bonus (bonusTypeId, bonusAmount, bonusWR, sticky, bonusText, bonusTerms, bonusUrl, freeSpinsAmount, minimumDeposit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const [bonusResult] = await db.queryAsync(bonusQ, [bonusTypeId, bonus.bonusAmount, bonus.bonusWR, bonus.sticky, bonus.bonusText, bonus.bonusTerms, bonus.bonusUrl, bonus.freeSpinsAmount, bonus.minimumDeposit]);
   const bonusId = bonusResult.insertId;
 
   const casinoBonusQuery = `INSERT INTO CasinoBonus (casinoId, bonusId) VALUES (?, ?)`;

@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 type BonusFormInputs = {
   bonusTypeId: number;
   bonusAmount: string;
-  bonusWE: string;
+  bonusWR: string;
   sticky: boolean;
   bonusText: string;
   bonusTerms: string;
@@ -46,10 +46,10 @@ const BonusForm: React.FC<{ onAddBonus: (bonus: BonusFormInputs) => void }> = ({
         <div>
           <label className="block text-gray-700">Bonus WE</label>
           <input
-            {...register('bonusWE', { required: true })}
+            {...register('bonusWR', { required: true })}
             className="w-full mt-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
           />
-          {errors.bonusWE && <span className="text-red-500 text-sm">This field is required</span>}
+          {errors.bonusWR && <span className="text-red-500 text-sm">This field is required</span>}
         </div>
 
         <div>

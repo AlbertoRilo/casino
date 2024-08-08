@@ -59,10 +59,13 @@ interface GameFormInputs {
 interface BonusFormInputs {
   bonusTypeId: { value: string; label: string } | null;
   bonusAmount: string;
-  bonusWE: string;
+  bonusWR: string;
   sticky: boolean;
   bonusText: string;
   bonusTerms: string;
+  bonusUrl: string;
+  freeSpinsAmount: string;
+  minimumDeposit: string;
 }
 
 interface TournamentFormInputs {
@@ -695,8 +698,9 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
   };
 
   const handleAddBonus = () => {
-    setBonuses([...bonuses, { bonusTypeId: {label:'',value:''}, bonusAmount: '', bonusWE: '', sticky: false, bonusText: '', bonusTerms: '' }]);
+    setBonuses([...bonuses, { bonusTypeId: {label:'',value:''}, bonusAmount: '', bonusWR: '', sticky: false, bonusText: '', bonusTerms: '' ,bonusUrl:'',freeSpinsAmount:'',minimumDeposit:''}]);
   };
+ 
 
   const handleAddTournament = () => {
     setTournaments([...tournaments, { tournamentTypeId: {label:'',value:''}, tournamentDescription: '',totalFS: 0, totalPrizePool: 0}]);
@@ -1481,14 +1485,36 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
                 setBonuses(updatedBonuses);
               }}
             />
+            <input
+              type="text"
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              placeholder="Total free spins amount"
+              value={bonus.freeSpinsAmount}
+              onChange={(e) => {
+                const updatedBonuses = [...bonuses];
+                updatedBonuses[index].freeSpinsAmount = e.target.value;
+                setBonuses(updatedBonuses);
+              }}
+            />
+             <input
+              type="text"
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              placeholder="Minimum deposit"
+              value={bonus.minimumDeposit}
+              onChange={(e) => {
+                const updatedBonuses = [...bonuses];
+                updatedBonuses[index].minimumDeposit = e.target.value;
+                setBonuses(updatedBonuses);
+              }}
+            />
               <input
               type="text"
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-              placeholder="Bonus WE"
-              value={bonus.bonusWE}
+              placeholder="Bonus Wager Requirements"
+              value={bonus.bonusWR}
               onChange={(e) => {
                 const updatedBonuses = [...bonuses];
-                updatedBonuses[index].bonusWE = e.target.value;
+                updatedBonuses[index].bonusWR = e.target.value;
                 setBonuses(updatedBonuses);
               }}
             />
@@ -1523,6 +1549,17 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
               onChange={(e) => {
                 const updatedBonuses = [...bonuses];
                 updatedBonuses[index].bonusTerms = e.target.value;
+                setBonuses(updatedBonuses);
+              }}
+            />
+               <input
+              type="url"
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              placeholder="Bonus URL"
+              value={bonus.bonusUrl}
+              onChange={(e) => {
+                const updatedBonuses = [...bonuses];
+                updatedBonuses[index].bonusUrl = e.target.value;
                 setBonuses(updatedBonuses);
               }}
             />
