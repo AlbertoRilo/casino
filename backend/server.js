@@ -63,6 +63,7 @@ app.post('/api/casino', (req, res) => {
     vpnAllowed ,
     cryptoCurrenciesSupported,
     bannedCountries,
+    casinoType,
     casinoCertifications,
     country,
     languages,
@@ -78,7 +79,7 @@ app.post('/api/casino', (req, res) => {
 
   // Insertar datos del casino en la base de datos
   const casinoQuery = `INSERT INTO Casino 
-    (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit,dailyWithdrawalLimit, monthlyWithdrawalLimit, bannedCountries, casinoCertifications, liveChat, eSportsBetting,   timeOut,
+    (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit,dailyWithdrawalLimit, monthlyWithdrawalLimit, bannedCountries,casinoType, casinoCertifications, liveChat, eSportsBetting,   timeOut,
     depositLimit ,
     lossLimit,
     realityCheck,
@@ -88,7 +89,7 @@ app.post('/api/casino', (req, res) => {
     wagerLimit,
     withdrawalLock,
     vpnAllowed , cryptoCurrenciesSupported, country, languages, currencies) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   db.query(
     casinoQuery,
@@ -106,6 +107,7 @@ app.post('/api/casino', (req, res) => {
       dailyWithdrawalLimit,
       monthlyWithdrawalLimit,
       JSON.stringify(bannedCountries), // Convertir a cadena JSON
+      JSON.stringify(casinoType), // Convertir a cadena JSON
       JSON.stringify(casinoCertifications), // Convertir a cadena JSON
       liveChat,
       eSportsBetting,
@@ -480,6 +482,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
       .on('data', (row) => {
         // Convertir campos separados por comas a arrays
         row.bannedCountries = row.bannedCountries ? row.bannedCountries.split(',') : [];
+        row.casinoType = row.casinoType ? row.casinoType.split(',') : [];
         row.casinoCertifications = row.casinoCertifications ? row.casinoCertifications.split(',') : [];
         row.country = row.country ? { label: row.country.split('|')[0], value: row.country.split('|')[1] } : {};
         row.languages = row.languages ? row.languages.split('|').map(value => ({ value })) : [];
@@ -523,12 +526,16 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
         wagerLimit,
         withdrawalLock,
         vpnAllowed ,
-        cryptoCurrenciesSupported, bannedCountries,casinoCertifications, country, languages, currencies,
+        cryptoCurrenciesSupported, bannedCountries,casinoType, casinoCertifications, country, languages, currencies,
         games, bonuses, tournaments, paymentProviders, licenses
       } = casino;
     // Verificar y manejar arrays no iterables
     if (!Array.isArray(bannedCountries)) {
       console.error('Expected bannedCountries to be an array, but got:', bannedCountries);
+      continue;
+    }
+    if (!Array.isArray(casinoType)) {
+      console.error('Expected casinoType to be an array, but got:', casinoType);
       continue;
     }
     if (!Array.isArray(casinoCertifications)) {
@@ -579,7 +586,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
 
     // Insertar datos del casino
     const casinoQuery = `INSERT INTO Casino 
-      (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit,dailyWithdrawalLimit,monthlyWithdrawalLimit, bannedCountries,casinoCertifications, liveChat, eSportsBetting,timeOut,
+      (casinoName, dateFounded, address, casinoOwner, dateLaunched, casinoUrl, phoneSupport, supportEmail, helpCentre, ageLimit,dailyWithdrawalLimit,monthlyWithdrawalLimit, bannedCountries,casinoType,casinoCertifications, liveChat, eSportsBetting,timeOut,
     depositLimit ,
     lossLimit,
     realityCheck,
@@ -589,7 +596,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
     wagerLimit,
     withdrawalLock,
     vpnAllowed , cryptoCurrenciesSupported, country, languages, currencies) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`;
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const [casinoResult] = await db.queryAsync(casinoQuery, [
       casinoName,
@@ -605,6 +612,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
       dailyWithdrawalLimit, 
       monthlyWithdrawalLimit,
       JSON.stringify(bannedCountries),
+      JSON.stringify(casinoType),
       JSON.stringify(casinoCertifications),
       liveChat,
       eSportsBetting,

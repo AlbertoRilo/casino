@@ -42,6 +42,7 @@ interface CasinoFormInputs {
   cryptoCurrenciesSupported: boolean;
   country: { value: string; label: string } | null;
   bannedCountries: { value: string; label: string }[];
+  casinoType: { value: string; label: string }[];
   casinoCertifications: { value: string; label: string }[];
   languages: { value: string; label: string }[];
   currencies:{ value: string; label: string }[];
@@ -85,6 +86,46 @@ interface LicenseFormInputs {
   licenseName: { value: string; label: string } | null;
 }
 //first version hardcoded but then fetch from DB 
+
+const casinoTypeOptions = [
+  {
+      value: "Mobile-friendly casinos",
+      label: "Mobile-friendly casinos"
+  },
+  {
+     value: "Crypto casinos",
+     label: "Crypto casinos"
+  },
+  {
+      value: "High RTP casinos",
+      label: "High RTP casinos"
+  },
+  {
+      value: "High roller casinos",
+      label: "High roller casinos"
+  },
+  {
+      value: "Live dealer casinos",
+      label: "Live dealer casinos"
+  },
+  {
+      value: "Anonymous casinos",
+      label: "Anonymous casinos"
+  },
+  {
+     value: "VPN-friendly casinos",
+      label: "VPN-friendly casinos"
+  },
+  {
+      label: "Responsible Gaming casinos",
+      value: "Responsible Gaming casinos"
+  },
+  {
+      label: "Fast withdrawal casinos",
+      value: "Fast withdrawal casinos"
+  }
+];
+
 
 const casinoCertificationsOptions = [
   { value: 'eCOGRA', label: 'eCOGRA' },
@@ -690,6 +731,9 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
   const [cryptoCurrenciesSupported, setCryptoCurrenciesSupported] = useState(false);
   const [country, setCountry] = useState<{ value: string; label: string } | null>(null);
   const [bannedCountries, setBannedCountries] = useState<{ value: string; label: string }[]>([]);
+  const [casinoType, setCasinoType] = useState<{ value: string; label: string }[]>([]);
+
+
   const [casinoCertifications, setCasinoCertifications] = useState<{ value: string; label: string }[]>([]);
   const [languages, setLanguages] = useState<{ value: string; label: string }[]>([]);
   const [currencies, setCurrencies] = useState<{ value: string; label: string }[]>([]);
@@ -752,6 +796,7 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
       cryptoCurrenciesSupported,
       country,
       bannedCountries,
+      casinoType,
       casinoCertifications,
       languages,
       currencies,
@@ -813,7 +858,28 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
             className="mt-1"
           />
         </div>
- 
+        <div>
+        <label className="block text-gray-700">Casino type</label>
+        <Controller
+          name="casinoType"
+          control={control}
+          defaultValue={casinoType}
+          render={({ field }) => (
+            <Select
+              {...field}
+              isMulti
+              options={casinoTypeOptions}
+              value={casinoType}
+              onChange={(selectedOptions: MultiValue<{ value: string; label: string }>) => {
+                const selectedArray = selectedOptions as { value: string; label: string }[];
+                setCasinoType(selectedArray);
+                field.onChange(selectedArray);
+              }}
+              className="mt-1"
+            />
+          )}
+        />
+      </div>
 
       <div>
         <label className="block text-gray-700">Banned Countries</label>
