@@ -861,7 +861,8 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
       </div>
 
       <div>
-        <label className="block text-gray-700">Currencies supported( * Assume the first currency added as the main currency * )</label>
+        <label className="block text-gray-700">Currencies supported</label>
+        <label> ( * Assume the first currency added as the main currency * )</label>
         <Controller
           name="currencies"
           control={control}
