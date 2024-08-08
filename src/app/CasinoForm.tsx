@@ -25,6 +25,8 @@ interface CasinoFormInputs {
   supportEmail: string;
   helpCentre: string;
   ageLimit: number;
+  dailyWithdrawalLimit: number;
+  monthlyWithdrawalLimit: number;
   liveChat: boolean;
   eSportsBetting: boolean;
   timeOut: boolean;
@@ -664,6 +666,10 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
   const [supportEmail, setSupportEmail] = useState('');
   const [helpCentre, setHelpCentre] = useState('');
   const [ageLimit, setAgeLimit] = useState<number>(0);
+  const [dailyWithdrawalLimit, setDailyWithdrawalLimit] = useState<number>(1);
+  const [monthlyWithdrawalLimit, setMonthlyWithdrawalLimit] = useState<number>(1);
+
+
   const [liveChat, setLiveChat] = useState(false);
   const [eSportsBetting, setESportsBetting] = useState(false);
   const [timeOut, setTimeOut] = useState(false);
@@ -728,6 +734,8 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
       phoneSupport,
       supportEmail,
       helpCentre,
+      dailyWithdrawalLimit,
+      monthlyWithdrawalLimit,
       ageLimit,
       liveChat,
       eSportsBetting,
@@ -897,6 +905,72 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
           )}
         />
       </div>
+      <div className="p-4 border rounded shadow-md">
+      <h2 className="text-lg font-bold text-black-600"> Daily Withdrawal Limit</h2>
+
+      <div className="mt-4">
+        <label className="block text-black-600">Maximum daily withdrawal limit  in  { currencies[0]?.value} <i className="fas fa-info-circle"></i></label>
+        <div className="flex items-center mt-2">
+          <input
+            type="number"
+            className="block w-1/3 p-2 border border-gray-300 rounded shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            value={dailyWithdrawalLimit}
+            onChange={(e) => setDailyWithdrawalLimit(Number(e.target.value))}
+            min="1"
+            max="100000"
+          />
+          <span className="ml-2"></span>
+        </div>
+
+        <div className="mt-4">
+          <input
+            type="range"
+            className="w-full"
+            min="1"
+            max="100000"
+            value={dailyWithdrawalLimit}
+            onChange={(e) => setDailyWithdrawalLimit(Number(e.target.value))}
+          />
+          <div className="flex justify-between text-sm text-gray-500 mt-1">
+            <span>1</span>
+            <span>100.000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="p-4 border rounded shadow-md">
+      <h2 className="text-lg font-bold text-black-600"> Monthly Withdrawal Limit</h2>
+
+      <div className="mt-4">
+        <label className="block text-black-600">Maximum monthly withdrawal limit in  { currencies[0]?.value}<i className="fas fa-info-circle"></i></label>
+        <div className="flex items-center mt-2">
+          <input
+            type="number"
+            className="block w-1/3 p-2 border border-gray-300 rounded shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            value={monthlyWithdrawalLimit}
+            onChange={(e) => setMonthlyWithdrawalLimit(Number(e.target.value))}
+            min="1"
+            max="1000000"
+          />
+          <span className="ml-2"></span>
+        </div>
+
+        <div className="mt-4">
+          <input
+            type="range"
+            className="w-full"
+            min="1"
+            max="1000000"
+            value={monthlyWithdrawalLimit}
+            onChange={(e) => setMonthlyWithdrawalLimit(Number(e.target.value))}
+          />
+          <div className="flex justify-between text-sm text-gray-500 mt-1">
+            <span>1</span>
+            <span>1.000.000</span>
+          </div>
+        </div>
+      </div>
+    </div>
       <div>
         <label className="block text-gray-700">Date Founded</label>
         <Controller
