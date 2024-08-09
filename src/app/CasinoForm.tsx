@@ -39,7 +39,7 @@ interface CasinoFormInputs {
   wagerLimit: boolean;
   withdrawalLock: boolean;
   vpnAllowed : boolean;
-  cryptoCurrenciesSupported: boolean;
+  cryptoCurrenciesSupported: { value: string; label: string }[];
   country: { value: string; label: string } | null;
   bannedCountries: { value: string; label: string }[];
   casinoType: { value: string; label: string }[];
@@ -85,7 +85,61 @@ interface PaymentProviderFormInputs {
 interface LicenseFormInputs {
   licenseName: { value: string; label: string } | null;
 }
-//first version hardcoded but then fetch from DB 
+//first version hardcoded but then fetch from DB
+
+const cryptocurrencyOptions = [
+  { value: 'BTC', label: 'Bitcoin' },
+  { value: 'ETH', label: 'Ethereum' },
+  { value: 'LTC', label: 'Litecoin' },
+  { value: 'BCH', label: 'Bitcoin Cash' },
+  { value: 'XRP', label: 'Ripple' },
+  { value: 'ADA', label: 'Cardano' },
+  { value: 'DOT', label: 'Polkadot' },
+  { value: 'BNB', label: 'Binance Coin' },
+  { value: 'USDT', label: 'Tether' },
+  { value: 'DOGE', label: 'Dogecoin' },
+  { value: 'SOL', label: 'Solana' },
+  { value: 'XLM', label: 'Stellar' },
+  { value: 'LINK', label: 'Chainlink' },
+  { value: 'UNI', label: 'Uniswap' },
+  { value: 'USDC', label: 'USD Coin' },
+  { value: 'TRX', label: 'Tron' },
+  { value: 'EOS', label: 'EOS' },
+  { value: 'XMR', label: 'Monero' },
+  { value: 'VET', label: 'VeChain' },
+  { value: 'ATOM', label: 'Cosmos' },
+  { value: 'AAVE', label: 'Aave' },
+  { value: 'MKR', label: 'Maker' },
+  { value: 'NEO', label: 'NEO' },
+  { value: 'ZEC', label: 'Zcash' },
+  { value: 'BTT', label: 'BitTorrent' },
+  { value: 'THETA', label: 'Theta' },
+  { value: 'XTZ', label: 'Tezos' },
+  { value: 'SNX', label: 'Synthetix' },
+  { value: 'AVAX', label: 'Avalanche' },
+  { value: 'FIL', label: 'Filecoin' },
+  { value: 'DASH', label: 'Dash' },
+  { value: 'MATIC', label: 'Polygon' },
+  { value: 'SUSHI', label: 'SushiSwap' },
+  { value: 'COMP', label: 'Compound' },
+  { value: 'BAT', label: 'Basic Attention Token' },
+  { value: 'OMG', label: 'OMG Network' },
+  { value: 'RVN', label: 'Ravencoin' },
+  { value: 'ZIL', label: 'Zilliqa' },
+  { value: 'ALGO', label: 'Algorand' },
+  { value: 'IOTA', label: 'IOTA' },
+  { value: 'ENJ', label: 'Enjin Coin' },
+  { value: 'YFI', label: 'Yearn Finance' },
+  { value: 'KSM', label: 'Kusama' },
+  { value: 'QTUM', label: 'Qtum' },
+  { value: 'GRT', label: 'The Graph' },
+  { value: 'CHZ', label: 'Chiliz' },
+  { value: 'RUNE', label: 'THORChain' },
+  { value: '1INCH', label: '1inch' },
+  { value: 'ANKR', label: 'Ankr' },
+  { value: 'FTM', label: 'Fantom' },
+];
+
 
 const casinoTypeOptions = [
   {
@@ -696,6 +750,8 @@ const paymentMethodsOptions = [
 
 const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
   const { control} = useForm();
+  const [cryptoAvailable, setCryptoAvailable] = useState(false);
+
 
   const [casinoName, setCasinoName] = useState('');
   const [dateFounded, setDateFounded] = useState('');
@@ -728,7 +784,7 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
   
   
 
-  const [cryptoCurrenciesSupported, setCryptoCurrenciesSupported] = useState(false);
+  const [cryptoCurrenciesSupported, setCryptoCurrenciesSupported] =  useState<{ value: string; label: string }[]>([]);
   const [country, setCountry] = useState<{ value: string; label: string } | null>(null);
   const [bannedCountries, setBannedCountries] = useState<{ value: string; label: string }[]>([]);
   const [casinoType, setCasinoType] = useState<{ value: string; label: string }[]>([]);
@@ -1458,27 +1514,46 @@ const CasinoForm: React.FC<CasinoFormProps> = ({ onSubmit }) => {
         />
       </div> 
 </div>
+<div>
+      {/* Checkbox to toggle visibility */}
       <div>
-        <label className="block text-gray-700">Crypto</label>
-        <Controller
-          name="crypto"
-          control={control}
-          defaultValue={false}
-          render={({ field }) => (
-            <input
-              {...field}
-              type="checkbox"
-              className="mt-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-              checked={field.value}
-              onChange={(e) => {
-                const value = e.target.checked;
-                setCryptoCurrenciesSupported(value);
-                field.onChange(value);
-              }}
-            />
-          )}
-        />
-      </div>     
+        <label className="block text-gray-700">
+          <input
+            type="checkbox"
+            checked={cryptoAvailable}
+            onChange={(e) => setCryptoAvailable(e.target.checked)}
+            className="mr-2"
+          />
+          Crypto available
+        </label>
+      </div>
+
+      {/* Conditional rendering of the div based on the checkbox state */}
+      {cryptoAvailable && (
+        <div>
+       
+          <Controller
+            name="cryptoCurrenciesSupported"
+            control={control}
+            defaultValue={cryptoCurrenciesSupported}
+            render={({ field }) => (
+              <Select
+                {...field}
+                isMulti
+                options={cryptocurrencyOptions}
+                value={cryptoCurrenciesSupported}
+                onChange={(selectedOptions: MultiValue<{ value: string; label: string }>) => {
+                  const selectedArray = selectedOptions as { value: string; label: string }[];
+                  setCryptoCurrenciesSupported(selectedArray);
+                  field.onChange(selectedArray);
+                }}
+                className="mt-1"
+              />
+            )}
+          />
+        </div>
+      )}
+    </div>
                      
 
         {/* Agregar otros campos según sea necesario */}

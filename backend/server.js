@@ -121,7 +121,7 @@ app.post('/api/casino', (req, res) => {
       wagerLimit,
       withdrawalLock,
       vpnAllowed ,
-      cryptoCurrenciesSupported,
+      JSON.stringify(cryptoCurrenciesSupported),
       JSON.stringify(country), // Convertir a cadena JSON
       JSON.stringify(languages), // Convertir a cadena JSON
       JSON.stringify(currencies) // Convertir a cadena JSON
@@ -626,7 +626,7 @@ app.post('/api/uploadcsv', upload.single('csvFile'), async (req, res) => {
     wagerLimit,
     withdrawalLock,
     vpnAllowed ,
-      cryptoCurrenciesSupported,
+     JSON.stringify(cryptoCurrenciesSupported),
       JSON.stringify(country),
       JSON.stringify(languages),
       JSON.stringify(currencies)
